@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"/>
+    <link rel="icon" href="/0.ico"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/><meta name="description" content="Textbase Bot"/>
+    <link rel="apple-touch-icon" href="/0.png"/><link rel="manifest" href="/manifest.json"/>
+    <title>Textbase</title>
+    <script defer="defer" src="/static/js/main.bb4d0c7b.js"></script>
+    <!-- <script defer src="/static/js/edit-test.js"></script> -->
+    <link href="/static/css/main.ffc94928.css" rel="stylesheet">
+
+    
+    <!-- <script type="module" src="https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js"></script> -->
+</head>
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+</body>
+    
+    <script type="module">
+        
+        // Import the functions you need from the SDKs you need
+        
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-app.js";
+        import { getDatabase, ref ,set , get ,child } from "https://www.gstatic.com/firebasejs/10.3.1/firebase-database.js";
+
+        const firebaseConfig = {
+        apiKey: "AIzaSyCaDwvePqwV4zXq503F4FJHernnvUcynrI",
+        authDomain: "text-base-titan.firebaseapp.com",
+        projectId: "text-base-titan",
+        storageBucket: "text-base-titan.appspot.com",
+        messagingSenderId: "756752470461",
+        appId: "1:756752470461:web:c8eae2f8d5e599f05c42d4",
+        databaseURL:"https://text-base-titan-default-rtdb.asia-southeast1.firebasedatabase.app"
+        };
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // insterting data into the firebase database
+        const db = getDatabase(app);
+        const dbref = ref(db);
+
+        let i = document.getElementById('message');
+        let f = i.parentElement;
+
+        function generateUniqueNumber() {
+            // Get the current timestamp in milliseconds
+            var timestamp = new Date().getTime();
+
+            // Return the timestamp as a unique number
+            return timestamp;
+        }
+        
+        f.addEventListener('submit',(e)=>{
+            e.preventDefault();
+
+            let msg = i.value;
+
+            let str = "";
+
+            get(child(dbref,"users/"+'fayaz'))
+                .then((data)=>{
+                    let str = data.val()?.user;
+                    console.log("inside get",str)
+                    if(!str)
+                    {
+                        str = "";
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err);
+                })
+                .finally(()=>{
+                    set(ref(db,"users/"+'fayaz'),{
+                        user: `${str}|${msg}`,
+                    })
+                    .then((data)=>{
+                        console.log("after adding ",`${str}|${msg}`);
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                    })
+                })      
+        })
+    </script>
+
+</html>
